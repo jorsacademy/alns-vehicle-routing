@@ -1,4 +1,23 @@
-# ALNS Vehicle Routing
+# Vehicle Routing Optimization
+
+<!-- portfolio-umbrella:start -->
+## Portfolio role
+
+This repository is the primary umbrella repository for this Jors Academy research area. Related projects have been consolidated under `projects/` so the methods, implementations, experiments, and case studies can be maintained and explored from one place.
+
+### Included projects
+
+- [`capacitated-vrp-branch-and-cut-python`](projects/capacitated-vrp-branch-and-cut-python/)
+- [`dynamic-cvrptw-online-reoptimization-python`](projects/dynamic-cvrptw-online-reoptimization-python/)
+- [`multi-objective-cvrp-nsga2-python`](projects/multi-objective-cvrp-nsga2-python/)
+- [`pickup-delivery-time-windows-ortools`](projects/pickup-delivery-time-windows-ortools/)
+- [`pyvrp-capacitated-vehicle-routing`](projects/pyvrp-capacitated-vehicle-routing/)
+- [`stochastic-cvrp-sample-average-approximation-python`](projects/stochastic-cvrp-sample-average-approximation-python/)
+- [`time-dependent-vehicle-routing-alns-python`](projects/time-dependent-vehicle-routing-alns-python/)
+- [`traveling-salesman-optimization-pyomo`](projects/traveling-salesman-optimization-pyomo/)
+
+Each consolidated project keeps its own files and a `SOURCE_REPOSITORY.md` provenance record. The snapshot preserves the source repository's default-branch files at consolidation time; repository-level history and metadata remain separate from the snapshot.
+<!-- portfolio-umbrella:end -->
 
 A reproducible Operations Research implementation of **Adaptive Large Neighborhood Search (ALNS)** for the capacitated vehicle routing problem (CVRP). The repository is designed to show the mechanics of a modern problem-specific metaheuristic rather than hide the search behind a library call.
 
