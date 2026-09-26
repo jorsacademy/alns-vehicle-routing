@@ -1,0 +1,26 @@
+{
+  "search": {
+    "iterations": 500,
+    "initial_temperature_ratio": 0.03,
+    "cooling": 0.995
+  },
+  "q_learning": {
+    "training_seeds": [101, 202, 303],
+    "epochs": 5,
+    "alpha": 0.20,
+    "gamma": 0.95,
+    "epsilon": 0.35,
+    "epsilon_min": 0.02,
+    "epsilon_decay": 0.97
+  },
+  "evaluation": {
+    "comparison_seeds": [101, 202, 303],
+    "exact_max_customers": 10
+  },
+  "splits": {
+    "train": {"count": 36, "seed_start": 10000, "n_customers_range": [10, 14], "target_routes": 3},
+    "validation": {"count": 12, "seed_start": 20000, "n_customers_range": [10, 14], "target_routes": 3},
+    "test": {"count": 18, "seed_start": 30000, "n_customers_range": [9, 10], "target_routes": 3},
+    "ood": {"count": 12, "seed_start": 40000, "n_customers_range": [18, 24], "target_routes": 5}
+  }
+}
