@@ -77,9 +77,7 @@ def _train_q(
     iterations = int(config["search"]["iterations"])
     for epoch in range(episodes):
         for index, instance in enumerate(train_instances):
-            seed = int(
-                np.random.SeedSequence([training_seed, epoch, index]).generate_state(1)[0]
-            )
+            seed = int(np.random.SeedSequence([training_seed, epoch, index]).generate_state(1)[0])
             run_search(instance, selector, iterations=iterations, search_seed=seed)
     return selector.freeze()
 
@@ -165,11 +163,7 @@ def _summary(records: list[dict[str, Any]]) -> list[MethodSummary]:
         final = np.asarray([r["final_objective"] for r in rows], dtype=float)
         improvement = np.asarray([r["improvement_pct"] for r in rows], dtype=float)
         gaps = np.asarray(
-            [
-                r["optimality_gap_pct"]
-                for r in rows
-                if r["optimality_gap_pct"] is not None
-            ],
+            [r["optimality_gap_pct"] for r in rows if r["optimality_gap_pct"] is not None],
             dtype=float,
         )
         summaries.append(
@@ -186,17 +180,13 @@ def _summary(records: list[dict[str, Any]]) -> list[MethodSummary]:
                 optimality_gap_pct_mean=float(gaps.mean()) if gaps.size else None,
                 runtime_s_mean=float(np.mean([r["runtime_s"] for r in rows])),
                 time_to_best_s_mean=float(np.mean([r["time_to_best_s"] for r in rows])),
-                iteration_to_best_mean=float(
-                    np.mean([r["iteration_to_best"] for r in rows])
-                ),
+                iteration_to_best_mean=float(np.mean([r["iteration_to_best"] for r in rows])),
             )
         )
     return summaries
 
 
-def _bootstrap_ci(
-    values: np.ndarray, seed: int, draws: int = 2000
-) -> tuple[float, float]:
+def _bootstrap_ci(values: np.ndarray, seed: int, draws: int = 2000) -> tuple[float, float]:
     if values.size == 0:
         return float("nan"), float("nan")
     rng = np.random.default_rng(seed)
@@ -209,11 +199,7 @@ def _bootstrap_ci(
 def _paired(records: list[dict[str, Any]]) -> dict[str, Any]:
     output: dict[str, Any] = {}
     for split in sorted({r["split"] for r in records}):
-        q_rows = [
-            r
-            for r in records
-            if r["split"] == split and r["method"] == "q_learning"
-        ]
+        q_rows = [r for r in records if r["split"] == split and r["method"] == "q_learning"]
         for baseline in (
             "fixed_best_validation",
             "random",
@@ -248,22 +234,13 @@ def run_benchmark(config_path: str | Path, output_dir: str | Path) -> dict[str, 
     config = json.loads(Path(config_path).read_text(encoding="utf-8"))
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    split_instances = {
-        name: _instances(name, spec) for name, spec in config["splits"].items()
-    }
-    comparison_seeds = [
-        int(x) for x in config["evaluation"]["comparison_seeds"]
-    ]
+    split_instances = {name: _instances(name, spec) for name, spec in config["splits"].items()}
+    comparison_seeds = [int(x) for x in config["evaluation"]["comparison_seeds"]]
     training_seeds = [int(x) for x in config["q_learning"]["training_seeds"]]
     if comparison_seeds != training_seeds:
         raise ValueError("comparison_seeds must equal training_seeds for paired evaluation")
-    fixed_action = _choose_fixed_operator(
-        split_instances["validation"], config, comparison_seeds
-    )
-    q_models = {
-        seed: _train_q(split_instances["train"], config, seed)
-        for seed in training_seeds
-    }
+    fixed_action = _choose_fixed_operator(split_instances["validation"], config, comparison_seeds)
+    q_models = {seed: _train_q(split_instances["train"], config, seed) for seed in training_seeds}
     methods = (
         "fixed_best_validation",
         "random",
@@ -294,9 +271,7 @@ def run_benchmark(config_path: str | Path, output_dir: str | Path) -> dict[str, 
             for comparison_seed in comparison_seeds:
                 search_seed = instance.seed ^ comparison_seed
                 for method in methods:
-                    selector = _selector(
-                        method, fixed_action, q_models[comparison_seed]
-                    )
+                    selector = _selector(method, fixed_action, q_models[comparison_seed])
                     result = run_search(
                         instance,
                         selector,
@@ -320,9 +295,7 @@ def run_benchmark(config_path: str | Path, output_dir: str | Path) -> dict[str, 
                     )
 
     summaries = _summary(records)
-    operator_usage: dict[str, dict[str, int]] = defaultdict(
-        lambda: defaultdict(int)
-    )
+    operator_usage: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for row in records:
         for name, count in row["operator_usage"].items():
             operator_usage[row["method"]][name] += int(count)
@@ -339,9 +312,7 @@ def run_benchmark(config_path: str | Path, output_dir: str | Path) -> dict[str, 
         "operator_names": list(OPERATOR_NAMES),
         "summaries": [asdict(item) for item in summaries],
         "paired_differences": _paired(records),
-        "operator_usage": {
-            method: dict(counts) for method, counts in operator_usage.items()
-        },
+        "operator_usage": {method: dict(counts) for method, counts in operator_usage.items()},
         "oracle": oracle_rows,
         "records": records,
         "claims_note": (
@@ -353,9 +324,7 @@ def run_benchmark(config_path: str | Path, output_dir: str | Path) -> dict[str, 
         json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
     )
     with (output / "metrics.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(
-            handle, fieldnames=list(asdict(summaries[0]).keys())
-        )
+        writer = csv.DictWriter(handle, fieldnames=list(asdict(summaries[0]).keys()))
         writer.writeheader()
         writer.writerows(asdict(item) for item in summaries)
     with (output / "raw_results.jsonl").open("w", encoding="utf-8") as handle:
