@@ -172,9 +172,7 @@ def greedy_initial_solution(instance: CVRPInstance) -> Solution:
 
 def solution_statistics(instance: CVRPInstance, solution: Solution) -> dict[str, float]:
     loads = np.asarray([route_load(instance, route) for route in solution], dtype=float)
-    route_lengths = np.asarray(
-        [route_distance(instance, route) for route in solution], dtype=float
-    )
+    route_lengths = np.asarray([route_distance(instance, route) for route in solution], dtype=float)
     load_mean = float(loads.mean()) if loads.size else 0.0
     return {
         "route_count": float(len(solution)),
