@@ -178,7 +178,7 @@ class QLearningSelector(BaseSelector):
         if self.learning:
             self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
-    def freeze(self) -> "QLearningSelector":
+    def freeze(self) -> QLearningSelector:
         frozen = QLearningSelector(
             self.n_actions,
             alpha=self.alpha,
