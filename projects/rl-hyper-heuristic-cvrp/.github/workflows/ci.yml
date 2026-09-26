@@ -1,0 +1,30 @@
+name: rl-hyper-heuristic-cvrp-ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-and-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pip check
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest
+      - run: rlhh-cvrp --config configs/smoke.json --output results/ci-smoke
+      - run: test -s results/ci-smoke/summary.json && test -s results/ci-smoke/metrics.csv
