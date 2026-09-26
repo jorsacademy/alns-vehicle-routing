@@ -121,9 +121,7 @@ class AdaptiveWeightSelector(BaseSelector):
         elif info.accepted:
             score = 1.0
         target = max(0.1, score)
-        self.weights[action] = (
-            (1.0 - self.reaction) * self.weights[action] + self.reaction * target
-        )
+        self.weights[action] = (1.0 - self.reaction) * self.weights[action] + self.reaction * target
 
 
 class QLearningSelector(BaseSelector):
