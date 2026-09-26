@@ -99,9 +99,7 @@ def _best_insertion(
     return best[1], best[2]
 
 
-def ruin_recreate(
-    instance: CVRPInstance, solution: Solution, rng: np.random.Generator
-) -> Solution:
+def ruin_recreate(instance: CVRPInstance, solution: Solution, rng: np.random.Generator) -> Solution:
     customers = [node for route in solution for node in route]
     if len(customers) < 2:
         return solution
