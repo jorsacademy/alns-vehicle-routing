@@ -18,8 +18,7 @@ def test_exact_oracle_matches_bruteforce_tsp_when_one_route_is_feasible() -> Non
     )
     d = distance_matrix(instance)
     brute = min(
-        d[0, p[0]] + d[p[0], p[1]] + d[p[1], p[2]] + d[p[2], 0]
-        for p in permutations((1, 2, 3))
+        d[0, p[0]] + d[p[0], p[1]] + d[p[1], p[2]] + d[p[2], 0] for p in permutations((1, 2, 3))
     )
     exact = exact_cvrp(instance, max_customers=4)
     assert exact.certified_optimal
