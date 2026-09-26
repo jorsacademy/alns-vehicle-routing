@@ -8,7 +8,7 @@ from typing import Any
 
 import numpy as np
 
-from .operators import OPERATORS, OPERATOR_NAMES
+from .operators import OPERATOR_NAMES, OPERATORS
 from .problem import (
     CVRPInstance,
     Solution,
